@@ -1,3 +1,236 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Estilos Base */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        @apply antialiased;
+    }
+    
+    body {
+        @apply bg-page text-body font-sans overflow-x-hidden;
+    }
+
+    h1 {
+        @apply text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-4 leading-tight;
+    }
+
+    h2 {
+        @apply text-3xl md:text-4xl font-semibold text-primary-400 mb-3 leading-snug;
+    }
+
+    h3 {
+        @apply text-2xl font-medium text-primary-500 mb-2 leading-relaxed;
+    }
+}
+
+/* Componentes */
+@layer components {
+    /* Botões */
+    .btn-primary {
+        @apply inline-flex items-center justify-center bg-primary hover:bg-primary-600 text-beige-100 font-semibold 
+               py-2 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105
+               focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-opacity-50
+               shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed
+               text-center whitespace-nowrap;
+    }
+    
+    .btn-secondary {
+        @apply inline-flex items-center justify-center bg-beige-200 hover:bg-beige-300 text-primary font-semibold 
+               py-2 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105
+               focus:outline-none focus:ring-2 focus:ring-beige-400 focus:ring-opacity-50
+               shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed
+               text-center whitespace-nowrap;
+    }
+
+    /* Links de Navegação */
+    .nav-link {
+        @apply font-medium transition-all duration-300 hover:text-primary-300 relative
+               after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 
+               after:bg-primary-300 after:transition-all after:duration-300
+               hover:after:w-full;
+    }
+
+    .mobile-nav-link {
+        @apply block py-2 px-4 text-lg transition-all duration-300 hover:bg-primary-50 
+               hover:text-primary-600 rounded-lg;
+    }
+
+    /* Cards */
+    .feature-card {
+        @apply bg-white rounded-xl shadow-lg p-6 transition-all duration-300
+               hover:shadow-2xl hover:scale-105 transform
+               border border-beige-200/50;
+    }
+
+    /* Seções */
+    .section {
+        @apply py-20 px-4 overflow-hidden;
+    }
+
+    .section-title {
+        @apply text-center mb-12 relative;
+        &::after {
+            content: '';
+            @apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 
+                   bg-primary rounded-full mt-4;
+        }
+    }
+
+    /* Hero Section */
+    .hero {
+        @apply relative min-h-screen flex items-center justify-center text-white;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+
+        &::before {
+            content: '';
+            @apply absolute inset-0 bg-gradient-to-r from-black/50 to-primary-900/50 z-0;
+        }
+    }
+
+    .hero-content {
+        @apply relative z-10 text-center max-w-4xl mx-auto px-4;
+    }
+
+    /* Estatísticas */
+    .stats-container {
+        @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto px-4;
+    }
+
+    .stat-card {
+        @apply bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center
+               transform transition-all duration-300 hover:scale-105 hover:shadow-xl
+               border border-beige-200/50;
+    }
+
+    .stat-number {
+        @apply text-4xl font-bold text-primary mb-2 
+               bg-gradient-to-r from-primary-500 to-primary-700 
+               bg-clip-text text-transparent;
+    }
+
+    /* Testimonials */
+    .testimonial-card {
+        @apply bg-white rounded-xl shadow-lg p-8 relative
+               transform transition-all duration-300 hover:shadow-2xl
+               border border-beige-200/50;
+
+        &::before {
+            content: '"';
+            @apply absolute -top-4 left-4 text-6xl text-primary-200 font-serif;
+        }
+    }
+
+    /* Parallax Section */
+    .parallax {
+        @apply relative overflow-hidden bg-fixed bg-center bg-no-repeat bg-cover;
+    }
+
+    .parallax-overlay {
+        @apply absolute inset-0 bg-gradient-to-r from-primary-900/80 to-primary-700/80;
+    }
+}
+
+/* Animações */
+@layer utilities {
+    .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-primary-700;
+    }
+
+    /* Animações de entrada */
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .slide-in-left {
+        opacity: 0;
+        transform: translateX(-100px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .slide-in-left.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .slide-in-right {
+        opacity: 0;
+        transform: translateX(100px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .slide-in-right.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* Hover Effects */
+    .hover-lift {
+        @apply transition-transform duration-300 ease-in-out hover:-translate-y-1;
+    }
+
+    .hover-glow {
+        @apply transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-primary-500/20;
+    }
+
+    /* Glassmorphism */
+    .glass {
+        @apply bg-white/70 backdrop-blur-md;
+    }
+
+    /* Gradientes */
+    .bg-gradient-primary {
+        @apply bg-gradient-to-r from-primary-600 to-primary-400;
+    }
+    
+    .bg-gradient-beige {
+        @apply bg-gradient-to-r from-beige-200 to-beige-100;
+    }
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+    .hero-content {
+        @apply px-4;
+    }
+
+    .section {
+        @apply py-12 px-4;
+    }
+
+    .stats-container {
+        @apply gap-4;
+    }
+
+    .feature-card, .testimonial-card {
+        @apply p-4;
+    }
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-beige-100;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-primary-400 rounded-full hover:bg-primary-500;
+}
