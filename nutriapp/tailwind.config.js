@@ -1,8 +1,8 @@
-import defaultTheme from 'tailwindcss/defaultTheme';
-import forms from '@tailwindcss/forms';
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
+    darkMode: 'class',
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
@@ -13,46 +13,48 @@ export default {
     theme: {
         extend: {
             colors: {
-                'primary': {
-                    DEFAULT: '#2C5530', // Dark green
-                    '50': '#E8F0E9',
-                    '100': '#D1E1D3',
-                    '200': '#A3C3A7',
-                    '300': '#75A57B',
-                    '400': '#4A7856', // Medium green
-                    '500': '#2C5530',
-                    '600': '#244428',
-                    '700': '#1C3320',
-                    '800': '#142218',
-                    '900': '#0C1110',
+                primary: {
+                    DEFAULT: '#2C5530',
+                    50: '#8FBE94',
+                    100: '#82B688',
+                    200: '#67A66E',
+                    300: '#519357',
+                    400: '#3C7041',
+                    500: '#2C5530',
+                    600: '#1C3A1F',
+                    700: '#0D1F0E',
+                    800: '#000000',
+                    900: '#000000',
+                    950: '#000000'
                 },
-                'beige': {
-                    DEFAULT: '#F5E6D3', // Light beige
-                    '50': '#FFFFFF',
-                    '100': '#FFF8F0', // Off-white beige
-                    '200': '#F5E6D3',
-                    '300': '#E8D4BB',
-                    '400': '#DAC2A3',
-                    '500': '#CCB08B',
-                    '600': '#BE9E73',
-                    '700': '#B08C5B',
-                    '800': '#967544',
-                    '900': '#725834',
+                beige: {
+                    DEFAULT: '#F5E6D3',
+                    50: '#FFFFFF',
+                    100: '#FFF8F0',
+                    200: '#F5E6D3',
+                    300: '#EAD0B0',
+                    400: '#DFBA8D',
+                    500: '#D4A46A',
+                    600: '#C98E47',
+                    700: '#AB7432',
+                    800: '#7F5625',
+                    900: '#533818',
+                    950: '#3D2912'
                 },
+                dark: {
+                    bg: '#1a1a1a',
+                    card: '#2d2d2d',
+                    text: '#e0e0e0',
+                    border: '#404040',
+                    primary: '#4A7856',
+                    accent: '#D4A46A'
+                }
             },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
-            backgroundColor: theme => ({
-                ...theme('colors'),
-                'page': '#FFF8F0', // Default page background
-            }),
-            textColor: theme => ({
-                ...theme('colors'),
-                'body': '#2C5530', // Default text color
-            }),
         },
     },
 
-    plugins: [forms],
+    plugins: [require('@tailwindcss/forms')],
 };

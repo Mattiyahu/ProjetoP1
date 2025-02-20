@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import GoogleButton from '@/Components/GoogleButton';
 
@@ -7,6 +7,7 @@ export default function Navbar({ auth }) {
     const [isOpen, setIsOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [isAtTop, setIsAtTop] = useState(true);
+    const { request } = usePage();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -22,7 +23,7 @@ export default function Navbar({ auth }) {
     return (
         <nav className={`fixed w-full z-50 transition-all duration-300 ${
             isScrolled 
-                ? 'bg-white shadow-lg py-2' 
+                ? 'bg-white dark:bg-dark-card shadow-lg py-2' 
                 : 'bg-transparent py-4'
         }`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,10 +37,10 @@ export default function Navbar({ auth }) {
                             }`}
                         >
                             <ApplicationLogo className={`w-10 h-10 ${
-                                isScrolled ? 'text-primary' : 'text-white'
+                                isScrolled ? 'text-primary dark:text-dark-primary' : 'text-white dark:text-dark-text'
                             }`} />
                             <span className={`text-xl font-bold transition-colors duration-300 ${
-                                isScrolled ? 'text-primary' : 'text-white'
+                                isScrolled ? 'text-primary dark:text-dark-primary' : 'text-white dark:text-dark-text'
                             }`}>
                                 NutriApp
                             </span>
@@ -50,38 +51,38 @@ export default function Navbar({ auth }) {
                     <div className="hidden md:flex items-center space-x-8">
                         <Link 
                             href="#sobre"
-                            className={`nav-link ${isScrolled ? 'text-primary-600' : 'text-white'}`}
+                            className={`nav-link ${isScrolled ? 'text-primary-600 dark:text-dark-text' : 'text-white dark:text-dark-text'}`}
                         >
                             Sobre
                         </Link>
                         <Link 
                             href="#servicos"
-                            className={`nav-link ${isScrolled ? 'text-primary-600' : 'text-white'}`}
+                            className={`nav-link ${isScrolled ? 'text-primary-600 dark:text-dark-text' : 'text-white dark:text-dark-text'}`}
                         >
                             Serviços
                         </Link>
                         <Link 
                             href="#contato"
-                            className={`nav-link ${isScrolled ? 'text-primary-600' : 'text-white'}`}
+                            className={`nav-link ${isScrolled ? 'text-primary-600 dark:text-dark-text' : 'text-white dark:text-dark-text'}`}
                         >
                             Contato
                         </Link>
-                        {auth.user ? (
+                        {auth?.user ? (
                             <Link
                                 href={route('dashboard')}
-                                className={`btn-primary ${isScrolled ? 'bg-primary' : 'bg-white text-primary hover:bg-beige-100'}`}
+                                className={`btn-primary ${isScrolled ? 'bg-primary dark:bg-dark-primary' : 'bg-white text-primary dark:bg-dark-card dark:text-dark-text hover:bg-beige-100'}`}
                             >
                                 Dashboard
                             </Link>
                         ) : (
                             <div className="flex items-center space-x-4">
-                                <GoogleButton className={isScrolled ? '' : 'bg-white/90 hover:bg-white'} />
+                                <GoogleButton className={isScrolled ? '' : 'bg-white/90 dark:bg-dark-card/90 hover:bg-white dark:hover:bg-dark-card'} />
                                 <Link
                                     href={route('register')}
                                     className={`btn-primary ${
                                         isScrolled 
-                                            ? 'bg-primary text-white' 
-                                            : 'bg-white text-primary hover:bg-beige-100'
+                                            ? 'bg-primary dark:bg-dark-primary text-white' 
+                                            : 'bg-white text-primary dark:bg-dark-card dark:text-dark-text hover:bg-beige-100'
                                     }`}
                                 >
                                     Registrar
@@ -94,7 +95,7 @@ export default function Navbar({ auth }) {
                     <div className="md:hidden">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className={`${isScrolled ? 'text-primary' : 'text-white'} p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors duration-300`}
+                            className={`${isScrolled ? 'text-primary dark:text-dark-text' : 'text-white dark:text-dark-text'} p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors duration-300`}
                         >
                             <svg
                                 className="h-6 w-6"
@@ -131,7 +132,7 @@ export default function Navbar({ auth }) {
                     }`}
                 >
                     <div className={`rounded-lg shadow-lg ${
-                        isScrolled ? 'bg-white' : 'bg-white/90 backdrop-blur-md'
+                        isScrolled ? 'bg-white dark:bg-dark-card' : 'bg-white/90 dark:bg-dark-card/90 backdrop-blur-md'
                     } p-4 space-y-4`}>
                         <Link 
                             href="#sobre"
@@ -154,7 +155,7 @@ export default function Navbar({ auth }) {
                         >
                             Contato
                         </Link>
-                        {auth.user ? (
+                        {auth?.user ? (
                             <Link
                                 href={route('dashboard')}
                                 className="btn-primary w-full text-center"
