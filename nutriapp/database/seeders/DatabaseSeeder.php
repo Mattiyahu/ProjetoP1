@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
         // ... outros seeders
 
         $this->call([
-            R24hQuestionnaireSeeder::class,
+            FoodSeeder::class,
         ]);
     }
 }
