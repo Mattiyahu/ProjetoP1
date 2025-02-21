@@ -41,6 +41,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('FoodTracking');
     })->name('food-tracking');
 
+    // Protected R24H Questionnaire route
+    Route::get('/r24h-questionnaire', function () {
+        return Inertia::render('R24hQuestionnaire');
+    })->name('r24h-questionnaire');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

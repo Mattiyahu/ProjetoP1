@@ -74,6 +74,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the R24H questionnaire answers for the user.
+     */
+    public function r24hQuestionnaireAnswers(): HasMany
+    {
+        return $this->hasMany(R24hQuestionnaireAnswer::class);
+    }
+
+    /**
      * Create a new personal access token for the user.
      */
     public function createToken(string $name, array $abilities = ['*'])

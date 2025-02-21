@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import axios from 'axios';
 import { useEffect } from 'react';
 
@@ -35,7 +35,7 @@ export default function Dashboard({ auth, token }) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="grid gap-6 mb-8 md:grid-cols-2">
+                    <div className="grid gap-6 mb-8 md:grid-cols-3">
                         <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                             <div className="p-6">
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
@@ -44,12 +44,12 @@ export default function Dashboard({ auth, token }) {
                                 <p className="text-gray-600 dark:text-gray-400 mb-4">
                                     Responda ao questionário sobre sua saúde mental.
                                 </p>
-                                <a
+                                <Link
                                     href="/purple-questions"
                                     className="inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 focus:bg-purple-700 active:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition ease-in-out duration-150"
                                 >
                                     Acessar Questionário
-                                </a>
+                                </Link>
                             </div>
                         </div>
 
@@ -61,12 +61,29 @@ export default function Dashboard({ auth, token }) {
                                 <p className="text-gray-600 dark:text-gray-400 mb-4">
                                     Registre seu consumo alimentar diário e acompanhe seus hábitos.
                                 </p>
-                                <a
+                                <Link
                                     href="/food-tracking"
                                     className="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150"
                                 >
                                     Registrar Alimentação
-                                </a>
+                                </Link>
+                            </div>
+                        </div>
+
+                        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                            <div className="p-6">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                                    Recordatório 24h
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                    Registre seu consumo alimentar nas últimas 24 horas.
+                                </p>
+                                <Link
+                                    href="/r24h-questionnaire"
+                                    className="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150"
+                                >
+                                    Preencher Recordatório
+                                </Link>
                             </div>
                         </div>
                     </div>
