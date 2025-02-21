@@ -20,20 +20,30 @@ export default function Register() {
         };
     }, []);
 
-    const submit = (e) => {
+const submit = (e) => {
+    console.log('Submit function triggered'); // Added log for debugging
         e.preventDefault();
-
-        post(route('register'));
+        console.log('Submitting registration with data:', data);
+        post(route('register'), {
+            onError: (errors) => {
+                console.error('Registration errors:', errors);
+            },
+        });
     };
 
     return (
         <GuestLayout>
-            <Head title="Register" />
+            <Head title="Registrar" />
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} className="space-y-4">
+                {errors.error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                        {errors.error}
+                    </div>
+                )}
+
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
-
+                    <InputLabel htmlFor="name" value="Nome" />
                     <TextInput
                         id="name"
                         name="name"
@@ -44,13 +54,11 @@ export default function Register() {
                         onChange={(e) => setData('name', e.target.value)}
                         required
                     />
-
                     <InputError message={errors.name} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
                     <InputLabel htmlFor="email" value="Email" />
-
                     <TextInput
                         id="email"
                         type="email"
@@ -61,13 +69,11 @@ export default function Register() {
                         onChange={(e) => setData('email', e.target.value)}
                         required
                     />
-
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
+                    <InputLabel htmlFor="password" value="Senha" />
                     <TextInput
                         id="password"
                         type="password"
@@ -78,13 +84,11 @@ export default function Register() {
                         onChange={(e) => setData('password', e.target.value)}
                         required
                     />
-
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
-
+                    <InputLabel htmlFor="password_confirmation" value="Confirmar Senha" />
                     <TextInput
                         id="password_confirmation"
                         type="password"
@@ -95,7 +99,6 @@ export default function Register() {
                         onChange={(e) => setData('password_confirmation', e.target.value)}
                         required
                     />
-
                     <InputError message={errors.password_confirmation} className="mt-2" />
                 </div>
 
@@ -104,11 +107,11 @@ export default function Register() {
                         href={route('login')}
                         className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                     >
-                        Already registered?
+                        Já tem uma conta?
                     </Link>
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Register
+                    <PrimaryButton type="submit" className="ms-4" disabled={processing}>
+                        Registrar
                     </PrimaryButton>
                 </div>
             </form>

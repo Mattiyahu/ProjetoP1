@@ -1,13 +1,7 @@
 export default function GoogleButton({ className = '' }) {
-    const handleGoogleLogin = () => {
-        // Redireciona diretamente para a URL do Google OAuth
-        window.location.href = 'http://localhost:8000/login/google';
-    };
-
     return (
-        <button
-            onClick={handleGoogleLogin}
-            type="button"
+        <a
+            href="/login/google"
             className={`inline-flex items-center justify-center px-4 py-2 bg-white text-gray-700 
                        border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 
                        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500
@@ -20,6 +14,6 @@ export default function GoogleButton({ className = '' }) {
                 />
             </svg>
             <span className="font-medium">Continuar com Google</span>
-        </button>
+        </a>
     );
 }

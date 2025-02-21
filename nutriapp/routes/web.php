@@ -16,8 +16,10 @@ use App\Http\Controllers\Auth\GoogleController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/login/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
-Route::get('/login/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
+Route::middleware('guest')->group(function () {
+    Route::get('/login/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+    Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
+});
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
