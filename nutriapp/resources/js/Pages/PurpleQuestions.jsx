@@ -22,26 +22,24 @@ const PurpleQuestions = () => {
         >
             <Head title="Questionário de Saúde Mental e Alimentação" />
 
-            <div className="py-12">
+            <div className="py-6">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-xl rounded-lg">
-                        <div className="bg-purple-600 px-6 py-4">
+                    <div className="bg-gradient-to-r from-[#F5F5DC] to-[#E8F5E9] overflow-hidden shadow-xl rounded-lg mb-6">
+                        <div className="bg-green-600 bg-opacity-90 px-6 py-4">
                             <h2 className="text-xl font-semibold text-white">Instruções</h2>
-                            <p className="text-purple-100 mt-1">
+                            <p className="text-green-50 mt-1">
                                 Por favor, responda às perguntas abaixo com sinceridade. Não existem 
                                 respostas certas ou erradas.
                             </p>
-                            <p className="text-purple-100 mt-2">
+                            <p className="text-green-50 mt-2">
                                 Usuário: {auth.user.name} ({auth.user.email})
                             </p>
                         </div>
-                        
-                        <div className="p-6">
-                            <PurpleQuestionsForm />
-                        </div>
                     </div>
 
-                    <div className="mt-8 text-center text-sm text-gray-500">
+                    <PurpleQuestionsForm />
+
+                    <div className="mt-8 text-center text-sm text-gray-600 bg-[#F5F5DC] p-4 rounded-lg shadow">
                         <p>
                             Suas respostas nos ajudarão a desenvolver melhores estratégias para 
                             promover uma alimentação saudável e bem-estar mental.
