@@ -5,21 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 
-class EducationalContent extends Model
+class Recipe extends Model
 {
     use HasFactory, HasRoles;
 
     protected $fillable = [
         'title',
-        'slug',
-        'body',
-        'content_type',
+        'description',
+        'ingredients',
+        'instructions',
+        'preparation_time',
+        'difficulty_level',
+        'image_url',
         'user_id',
-        'status',
-        'metadata'
+        'content'
     ];
 
     /**
@@ -28,35 +29,17 @@ class EducationalContent extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'metadata' => 'array',
+        'ingredients' => 'array',
+        'content' => 'array',
     ];
 
-    /**
-     * Boot the model.
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($content) {
-            $content->slug = Str::slug($content->title);
-        });
-
-        static::updating(function ($content) {
-            $content->slug = Str::slug($content->title);
-        });
-    }
-
-    /**
-     * Get the user that owns the educational content.
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
     /**
-     * Check if the user can manage this content
+     * Check if the user can manage this recipe
      */
     public function canManage(User $user): bool
     {

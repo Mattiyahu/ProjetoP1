@@ -1,18 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\EducationalContent;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class EducationalContentController extends Controller
 {
     public function index()
     {
         $contents = EducationalContent::with('user')->latest()->get();
-        return response()->json($contents);
+        return Inertia::render('EducationalContent/Index', [
+            'contents' => $contents
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('EducationalContent');
     }
 
     public function store(Request $request)
@@ -24,16 +30,19 @@ class EducationalContentController extends Controller
             'status' => 'required|in:draft,published'
         ]);
 
-        $validated['user_id'] = Auth::id();
+        $validated['user_id'] = auth()->id();
 
         $content = EducationalContent::create($validated);
 
-        return response()->json($content, 201);
+        return redirect()->route('educational.content.index')
+            ->with('message', 'Conteúdo criado com sucesso!');
     }
 
-    public function show(EducationalContent $content)
+    public function edit(EducationalContent $content)
     {
-        return response()->json($content->load('user'));
+        return Inertia::render('EducationalContent/Edit', [
+            'content' => $content
+        ]);
     }
 
     public function update(Request $request, EducationalContent $content)
@@ -49,7 +58,8 @@ class EducationalContentController extends Controller
 
         $content->update($validated);
 
-        return response()->json($content);
+        return redirect()->route('educational.content.index')
+            ->with('message', 'Conteúdo atualizado com sucesso!');
     }
 
     public function destroy(EducationalContent $content)
@@ -58,6 +68,7 @@ class EducationalContentController extends Controller
         
         $content->delete();
 
-        return response()->json(null, 204);
+        return redirect()->route('educational.content.index')
+            ->with('message', 'Conteúdo excluído com sucesso!');
     }
 }

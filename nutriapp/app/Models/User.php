@@ -7,10 +7,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -79,6 +80,22 @@ class User extends Authenticatable
     public function r24hQuestionnaireAnswers(): HasMany
     {
         return $this->hasMany(R24hQuestionnaireAnswer::class);
+    }
+
+    /**
+     * Get the recipes for the user.
+     */
+    public function recipes(): HasMany
+    {
+        return $this->hasMany(Recipe::class);
+    }
+
+    /**
+     * Get the educational contents for the user.
+     */
+    public function educationalContents(): HasMany
+    {
+        return $this->hasMany(EducationalContent::class);
     }
 
     /**

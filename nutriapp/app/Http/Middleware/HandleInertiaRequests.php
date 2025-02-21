@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Illuminate\Support\Facades\Session;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -33,21 +34,21 @@ class HandleInertiaRequests extends Middleware
         $token = null;
 
         if ($user) {
-            // Delete existing tokens and create a new one
-            $user->tokens()->delete();
-            $token = $user->createToken('auth-token')->plainTextToken;
-            session(['token' => $token]);
+            $token = $user->tokens()->latest()->first()?->plainTextToken ?? session('token');
         }
 
-        return [
-            ...parent::share($request),
+        return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $user,
-                'token' => $token ?? session('token'),
+                'token' => $token,
             ],
+            'csrf_token' => csrf_token(),
             'flash' => [
                 'message' => fn () => $request->session()->get('message')
             ],
-        ];
+            'ziggy' => [
+                'url' => $request->getBaseUrl()
+            ],
+        ]);
     }
 }

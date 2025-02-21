@@ -8,6 +8,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -46,16 +47,24 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        // Revoke the token that was used to authenticate the current request
-        if ($request->user()) {
-            $request->user()->currentAccessToken()->delete();
+        try {
+            // Get the current user
+            $user = $request->user();
+
+            if ($user) {
+                // Delete all tokens for the user
+                $user->tokens()->delete();
+            }
+
+            Auth::guard('web')->logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+        } catch (\Exception $e) {
+            // Log the error but continue with logout
+            Log::error('Error during logout: ' . $e->getMessage());
         }
-
-        Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
 
         return redirect('/');
     }

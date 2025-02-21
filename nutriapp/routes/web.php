@@ -1,20 +1,18 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Api\EducationalContentController;
+use App\Http\Controllers\Api\RecipeController;
+use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\Auth\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
 */
 
 Route::get('/', function () {
@@ -26,34 +24,81 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])
+    ->name('login')
+    ->middleware('guest');
 
-    // Protected Purple Questions route
-    Route::get('/purple-questions', function () {
-        return Inertia::render('PurpleQuestions');
-    })->name('purple-questions');
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+    ->middleware(['web', 'guest']);
 
-    // Protected Food Tracking route
-    Route::get('/food-tracking', function () {
-        return Inertia::render('FoodTracking');
-    })->name('food-tracking');
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-    // Protected R24H Questionnaire route
-    Route::get('/r24h-questionnaire', function () {
-        return Inertia::render('R24hQuestionnaire');
-    })->name('r24h-questionnaire');
-
+Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Educational Content Routes
+    Route::prefix('educational-content')->name('educational.content.')->group(function () {
+        Route::get('/', [EducationalContentController::class, 'index'])
+            ->middleware('permission:view educational content')
+            ->name('index');
+            
+        Route::get('/create', [EducationalContentController::class, 'create'])
+            ->middleware('permission:create educational content')
+            ->name('create');
+            
+        Route::post('/', [EducationalContentController::class, 'store'])
+            ->middleware('permission:create educational content')
+            ->name('store');
+            
+        Route::get('/{content}/edit', [EducationalContentController::class, 'edit'])
+            ->middleware('permission:edit educational content')
+            ->name('edit');
+            
+        Route::put('/{content}', [EducationalContentController::class, 'update'])
+            ->middleware('permission:edit educational content')
+            ->name('update');
+            
+        Route::delete('/{content}', [EducationalContentController::class, 'destroy'])
+            ->middleware('permission:delete educational content')
+            ->name('destroy');
+    });
+
+    // Recipe Routes
+    Route::prefix('recipes')->name('recipes.')->group(function () {
+        Route::get('/', [RecipeController::class, 'index'])
+            ->middleware('permission:view recipes')
+            ->name('index');
+            
+        Route::get('/create', [RecipeController::class, 'create'])
+            ->middleware('permission:create recipes')
+            ->name('create');
+            
+        Route::post('/', [RecipeController::class, 'store'])
+            ->middleware('permission:create recipes')
+            ->name('store');
+            
+        Route::get('/{recipe}/edit', [RecipeController::class, 'edit'])
+            ->middleware('permission:edit recipes')
+            ->name('edit');
+            
+        Route::put('/{recipe}', [RecipeController::class, 'update'])
+            ->middleware('permission:edit recipes')
+            ->name('update');
+            
+        Route::delete('/{recipe}', [RecipeController::class, 'destroy'])
+            ->middleware('permission:delete recipes')
+            ->name('destroy');
+    });
 });
 
-Route::middleware('guest')->group(function () {
-    Route::get('/login/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
-    Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
+// Google OAuth Routes
+Route::prefix('auth')->group(function () {
+    Route::get('/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+    Route::get('/google/callback', [GoogleController::class, 'handleGoogleCallback'])->middleware('web');
 });
 
 require __DIR__.'/auth.php';

@@ -11,16 +11,50 @@ use App\Http\Controllers\Api\PurpleQuestionAnswerController;
 use App\Http\Controllers\Api\EducationalContentController;
 use App\Http\Controllers\Api\FoodController;
 use App\Http\Controllers\Api\FoodTrackingController;
+use App\Http\Controllers\Api\RecipeController;
 
 // Public routes
 Route::apiResource('foods', FoodController::class)->only(['index', 'show']);
-Route::apiResource('educational-contents', EducationalContentController::class);
+
+// Educational Content public routes (view only)
+Route::middleware(['permission:view educational content'])->group(function () {
+    Route::get('educational-contents', [EducationalContentController::class, 'index']);
+    Route::get('educational-contents/{educationalContent}', [EducationalContentController::class, 'show']);
+});
+
 Route::apiResource('purple-questions', PurpleQuestionController::class)->only(['index', 'show']);
 
-// Protected routes
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
+    });
+
+    // Educational Content protected routes
+    Route::middleware(['permission:create educational content'])->group(function () {
+        Route::post('educational-contents', [EducationalContentController::class, 'store']);
+    });
+    Route::middleware(['permission:edit educational content'])->group(function () {
+        Route::put('educational-contents/{educationalContent}', [EducationalContentController::class, 'update']);
+        Route::patch('educational-contents/{educationalContent}', [EducationalContentController::class, 'update']);
+    });
+    Route::middleware(['permission:delete educational content'])->group(function () {
+        Route::delete('educational-contents/{educationalContent}', [EducationalContentController::class, 'destroy']);
+    });
+
+    // Recipe protected routes
+    Route::middleware(['permission:view recipes'])->group(function () {
+        Route::get('recipes', [RecipeController::class, 'index']);
+        Route::get('recipes/{recipe}', [RecipeController::class, 'show']);
+    });
+    Route::middleware(['permission:create recipes'])->group(function () {
+        Route::post('recipes', [RecipeController::class, 'store']);
+    });
+    Route::middleware(['permission:edit recipes'])->group(function () {
+        Route::put('recipes/{recipe}', [RecipeController::class, 'update']);
+        Route::patch('recipes/{recipe}', [RecipeController::class, 'update']);
+    });
+    Route::middleware(['permission:delete recipes'])->group(function () {
+        Route::delete('recipes/{recipe}', [RecipeController::class, 'destroy']);
     });
 
     // R24H Questionnaire routes
