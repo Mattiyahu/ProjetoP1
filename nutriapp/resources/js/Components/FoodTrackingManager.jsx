@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
+const FoodTrackingManager = ({ auth }) => {
     const [questions, setQuestions] = useState([]);
     const [currentSection, setCurrentSection] = useState(0);
     const [responses, setResponses] = useState({});
@@ -10,6 +10,7 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
     const [submitError, setSubmitError] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [fadeOut, setFadeOut] = useState(false);
+    const [trackingDate, setTrackingDate] = useState(new Date().toISOString().split('T')[0]);
 
     useEffect(() => {
         const setupAxios = () => {
@@ -17,6 +18,7 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
             axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
             axios.defaults.headers.common['Accept'] = 'application/json';
             
+            // Get token from auth prop
             const token = auth?.token;
             console.log('Current token:', token);
 
@@ -35,22 +37,44 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
 
     const fetchQuestions = async () => {
         try {
-            const response = await axios.get('/api/purple-questions');
-            const groupedQuestions = groupQuestionsIntoSections(response.data);
+            console.log('Making request with headers:', {
+                Authorization: axios.defaults.headers.common['Authorization'],
+                Accept: axios.defaults.headers.common['Accept'],
+                'X-Requested-With': axios.defaults.headers.common['X-Requested-With']
+            });
+
+            const response = await axios.get('/api/food-tracking/questions');
+            console.log('Questions response:', response.data);
+            
+            const groupedQuestions = groupQuestionsByCategory(response.data);
             setQuestions(groupedQuestions);
             setLoading(false);
         } catch (error) {
-            setSubmitError('Erro ao carregar as perguntas.');
+            console.error('Error fetching questions:', {
+                error: error.response?.data || error.message,
+                status: error.response?.status,
+                headers: error.response?.headers
+            });
+            setSubmitError('Erro ao carregar as perguntas. Por favor, tente novamente.');
             setLoading(false);
         }
     };
 
-    const groupQuestionsIntoSections = (questions) => {
-        const sections = [];
-        for (let i = 0; i < questions.length; i += 5) {
-            sections.push(questions.slice(i, i + 5));
-        }
-        return sections;
+    const groupQuestionsByCategory = (questions) => {
+        const mealQuestions = questions.filter(q => q.category === 'meal_tracking');
+        const emotionalQuestions = questions.filter(q => q.category === 'emotional');
+        const hydrationQuestions = questions.filter(q => q.category === 'hydration');
+
+        return [
+            mealQuestions.slice(0, 4),   // Café da manhã
+            mealQuestions.slice(4, 8),   // Lanche da manhã
+            mealQuestions.slice(8, 12),  // Almoço
+            mealQuestions.slice(12, 16), // Lanche da tarde
+            mealQuestions.slice(16, 20), // Jantar
+            mealQuestions.slice(20, 24), // Lanche da noite
+            emotionalQuestions,          // Questões emocionais
+            hydrationQuestions,          // Questões de hidratação
+        ].filter(section => section.length > 0);
     };
 
     const handleResponseChange = (id, value) => {
@@ -61,15 +85,22 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
         setSubmitting(true);
         setSubmitError(null);
         try {
-            await axios.post('/api/purple-question-answers', {
+            const response = await axios.post('/api/food-tracking/answers', {
                 answers: Object.entries(responses).map(([questionId, answer]) => ({
                     question_id: parseInt(questionId),
                     answer: answer
-                }))
+                })),
+                tracking_date: trackingDate
             });
+            console.log('Submit response:', response.data);
             setSubmitted(true);
         } catch (error) {
-            setSubmitError('Erro ao enviar as respostas.');
+            console.error('Error submitting answers:', {
+                error: error.response?.data || error.message,
+                status: error.response?.status,
+                headers: error.response?.headers
+            });
+            setSubmitError('Erro ao enviar as respostas. Por favor, tente novamente.');
         } finally {
             setSubmitting(false);
         }
@@ -85,6 +116,20 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
             }
             setFadeOut(false);
         }, 300);
+    };
+
+    const getSectionTitle = (index) => {
+        const titles = [
+            'Café da Manhã',
+            'Lanche da Manhã',
+            'Almoço',
+            'Lanche da Tarde',
+            'Jantar',
+            'Lanche da Noite',
+            'Como Você Se Sente',
+            'Hidratação'
+        ];
+        return titles[index] || `Seção ${index + 1}`;
     };
 
     if (loading) {
@@ -107,22 +152,33 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <h2 className="text-2xl font-bold text-green-700 mb-4">Questionário Concluído!</h2>
-                    <p className="text-gray-600">Suas respostas foram enviadas com sucesso. Obrigado pela sua participação!</p>
+                    <h2 className="text-2xl font-bold text-green-700 mb-4">Acompanhamento Registrado!</h2>
+                    <p className="text-gray-600">Suas respostas foram salvas com sucesso. Continue mantendo o registro da sua alimentação!</p>
                 </div>
             </div>
         );
     }
 
     const sectionColors = {
-        even: 'from-[#F5F5DC] to-[#F8F8DC]', // Beige gradient
-        odd: 'from-[#E8F5E9] to-[#C8E6C9]'   // Green gradient
+        even: 'from-[#F5F5DC] to-[#F8F8DC]',
+        odd: 'from-[#E8F5E9] to-[#C8E6C9]'
     };
 
     return (
         <div className={`min-h-screen bg-gradient-to-br transition-all duration-500 ${currentSection % 2 === 0 ? sectionColors.even : sectionColors.odd}`}>
             <div className="container mx-auto px-4 py-12">
                 <div className="max-w-3xl mx-auto">
+                    {/* Date Selection */}
+                    <div className="mb-8 bg-white rounded-xl p-6 shadow-lg">
+                        <label className="block text-gray-700 font-medium mb-2">Data do Registro:</label>
+                        <input
+                            type="date"
+                            value={trackingDate}
+                            onChange={(e) => setTrackingDate(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        />
+                    </div>
+
                     {/* Progress bar */}
                     <div className="mb-8 bg-white rounded-xl p-6 shadow-lg">
                         <div className="flex justify-between items-center mb-3">
@@ -145,7 +201,7 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
                             <span className="bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">
                                 {currentSection + 1}
                             </span>
-                            <span>Seção {currentSection + 1} de {questions.length}</span>
+                            <span>{getSectionTitle(currentSection)}</span>
                         </h2>
                         
                         {questions[currentSection]?.map((question, index) => (
@@ -186,22 +242,6 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
                                     </div>
                                 )}
 
-                                {question.question_type === 'checkbox' && (
-                                    <div className="ml-9 space-y-3">
-                                        {question.answer_options?.map(option => (
-                                            <div key={option} className="flex items-center bg-gray-50 p-3 rounded-lg hover:bg-gray-100 transition-colors duration-200">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={responses[question.id] === option}
-                                                    onChange={(e) => handleResponseChange(question.id, e.target.checked ? option : null)}
-                                                    className="h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded transition-all duration-200"
-                                                />
-                                                <label className="ml-3 text-gray-700 select-none">{option}</label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-
                                 {question.question_type === 'textarea' && (
                                     <div className="ml-9">
                                         <textarea
@@ -211,20 +251,6 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
                                             rows="4"
                                             placeholder="Digite sua resposta"
                                         />
-                                    </div>
-                                )}
-
-                                {question.question_type === 'select-text' && (
-                                    <div className="ml-9">
-                                        <select
-                                            value={responses[question.id] || ''}
-                                            onChange={(e) => handleResponseChange(question.id, e.target.value)}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 bg-white"
-                                        >
-                                            <option value="">Selecione uma opção</option>
-                                            <option value="Yes">Sim</option>
-                                            <option value="No">Não</option>
-                                        </select>
                                     </div>
                                 )}
                             </div>
@@ -297,4 +323,4 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
     );
 };
 
-export default PurpleQuestionsManagerUpdatedFinal;
+export default FoodTrackingManager;

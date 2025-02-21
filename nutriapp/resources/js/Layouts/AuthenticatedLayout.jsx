@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import ApplicationLogo from '../Components/ApplicationLogo';
-import Dropdown from '../Components/Dropdown';
-import NavLink from '../Components/NavLink';
-import ResponsiveNavLink from '../Components/ResponsiveNavLink';
+import ApplicationLogo from '@/Components/ApplicationLogo';
+import Dropdown from '@/Components/Dropdown';
+import NavLink from '@/Components/NavLink';
+import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 
 export default function Authenticated({ user, header, children }) {
@@ -41,10 +41,10 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
-<NavLink href="/purple-questions" active={route().current('purple-questions')}>
+                                <NavLink href="/purple-questions" active={route().current('purple-questions')}>
                                     Saúde Mental
                                 </NavLink>
-                                <NavLink href="/orange-questions" active={route().current('orange-questions')}>
+                                <NavLink href="/food-tracking" active={route().current('food-tracking')}>
                                     Acompanhamento Alimentar
                                 </NavLink>
                                 <NavLink href="/r24h-questionnaire" active={route().current('r24h-questionnaire')}>

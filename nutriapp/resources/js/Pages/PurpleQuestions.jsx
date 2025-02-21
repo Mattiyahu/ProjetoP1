@@ -1,7 +1,7 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, usePage } from '@inertiajs/react';
-import PurpleQuestionsForm from '@/Components/Questionnaires/PurpleQuestionsForm';
+import PurpleQuestionsManagerUpdatedFinal from '@/Components/PurpleQuestionsManagerUpdatedFinal';
 
 const PurpleQuestions = () => {
     const { auth } = usePage().props;
@@ -37,7 +37,7 @@ const PurpleQuestions = () => {
                         </div>
                     </div>
 
-                    <PurpleQuestionsForm />
+                    <PurpleQuestionsManagerUpdatedFinal auth={auth} />
 
                     <div className="mt-8 text-center text-sm text-gray-600 bg-[#F5F5DC] p-4 rounded-lg shadow">
                         <p>

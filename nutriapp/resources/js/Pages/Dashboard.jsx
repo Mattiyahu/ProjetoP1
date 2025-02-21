@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import PurpleQuestionsManager from '../Components/PurpleQuestionsManager';
+import axios from 'axios';
 import { useEffect } from 'react';
 
 export default function Dashboard({ auth, token }) {
@@ -35,8 +35,40 @@ export default function Dashboard({ auth, token }) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">You're logged in!</div>
+                    <div className="grid gap-6 mb-8 md:grid-cols-2">
+                        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                            <div className="p-6">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                                    Saúde Mental
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                    Responda ao questionário sobre sua saúde mental.
+                                </p>
+                                <a
+                                    href="/purple-questions"
+                                    className="inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 focus:bg-purple-700 active:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition ease-in-out duration-150"
+                                >
+                                    Acessar Questionário
+                                </a>
+                            </div>
+                        </div>
+
+                        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                            <div className="p-6">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                                    Acompanhamento Alimentar
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                    Registre seu consumo alimentar diário e acompanhe seus hábitos.
+                                </p>
+                                <a
+                                    href="/food-tracking"
+                                    className="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150"
+                                >
+                                    Registrar Alimentação
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

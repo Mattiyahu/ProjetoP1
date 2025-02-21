@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             FoodSeeder::class,
             PurpleQuestionsSeeder::class,
+            FoodTrackingQuestionsSeeder::class,
         ]);
     }
 }

@@ -36,6 +36,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('PurpleQuestions');
     })->name('purple-questions');
 
+    // Protected Food Tracking route
+    Route::get('/food-tracking', function () {
+        return Inertia::render('FoodTracking');
+    })->name('food-tracking');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
