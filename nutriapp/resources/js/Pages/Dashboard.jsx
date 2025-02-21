@@ -1,7 +1,31 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import PurpleQuestionsManager from '../Components/PurpleQuestionsManager';
+import { useEffect } from 'react';
 
-export default function Dashboard({ auth }) {
+export default function Dashboard({ auth, token }) {
+    useEffect(() => {
+        const setupAuth = async () => {
+            try {
+                // Store the token in sessionStorage if it exists
+                if (token) {
+                    window.sessionStorage.setItem('token', token);
+                    
+                    // Set up axios defaults
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                    axios.defaults.withCredentials = true;
+                    
+                    // Get CSRF token
+                    await axios.get('/sanctum/csrf-cookie');
+                }
+            } catch (error) {
+                console.error('Error setting up auth:', error);
+            }
+        };
+        
+        setupAuth();
+    }, [token]);
+
     return (
         <AuthenticatedLayout
             user={auth.user}

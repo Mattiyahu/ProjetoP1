@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\PurpleQuestion;
+use App\Models\PurpleQuestionAnswer;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class PurpleQuestionsSeeder extends Seeder
 {
@@ -12,7 +14,15 @@ class PurpleQuestionsSeeder extends Seeder
      */
     public function run(): void
     {
-        PurpleQuestion::truncate(); // Limpa a tabela antes de inserir novos dados
+        // Disable foreign key checks
+        Schema::disableForeignKeyConstraints();
+        
+        // Clear both tables
+        PurpleQuestionAnswer::truncate();
+        PurpleQuestion::truncate();
+
+        // Re-enable foreign key checks
+        Schema::enableForeignKeyConstraints();
 
         // Perguntas sobre saúde mental
         PurpleQuestion::create([
@@ -77,12 +87,12 @@ class PurpleQuestionsSeeder extends Seeder
         PurpleQuestion::create([
             'question_text' => 'Você segue algum tipo de dieta específica?',
             'question_type' => 'select',
-            'answer_options' => ['Sim', 'Não'], // Se precisar de especificação, pode adicionar lógica no frontend para exibir um campo de texto condicionalmente
+            'answer_options' => ['Sim', 'Não'],
         ]);
         PurpleQuestion::create([
             'question_text' => 'Você tem algum tipo de intolerância ou alergia alimentar? (Sim / Não) (Se sim, especifique)',
             'question_type' => 'select',
-            'answer_options' => ['Sim', 'Não'], // Se precisar de especificação, pode adicionar lógica no frontend para exibir um campo de texto condicionalmente
+            'answer_options' => ['Sim', 'Não'],
         ]);
     }
 }

@@ -26,61 +26,54 @@ class GoogleController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-            Log::info('Google user data received', ['email' => $googleUser->getEmail()]);
             
-            // Procura um usuário pelo email do Google
-            $existingUser = User::where('email', $googleUser->getEmail())->first();
-            Log::debug('User lookup result', ['exists' => $existingUser !== null]);
+            // Log dos dados recebidos do Google
+            Log::info('Google user data received, refresh token:', [
+                'refresh_token' => $googleUser->refreshToken ?? null,
+                'email' => $googleUser->getEmail(),
+                'id' => $googleUser->getId(),
+                'token' => $googleUser->token,
+                'refresh_token' => $googleUser->refreshToken ?? null
+            ]);
             
+            // Procura um usuário pelo email ou google_id
+            $existingUser = User::where('email', $googleUser->getEmail())
+                ->orWhere('google_id', $googleUser->getId())
+                ->first();
+
             if ($existingUser) {
-                // Se o usuário existe, atualiza as informações do Google
-                $existingUser->update([
-                    'google_id' => $googleUser->getId(),
-                    'google_token' => $googleUser->token,
-                    'google_refresh_token' => $googleUser->refreshToken,
-                ]);
+                // Atualiza as informações do Google
+$existingUser->forceFill([
+    'google_id' => $googleUser->getId(),
+    'google_token' => $googleUser->token,
+    'google_refresh_token' => $googleUser->refreshToken // Ensure refresh token is saved
+                ])->save();
                 
                 Log::info('Updating existing user with Google data', ['user_id' => $existingUser->id]);
                 $user = $existingUser;
             } else {
-                // Se o usuário não existe, cria um novo
-                Log::info('Creating new user with Google data', ['email' => $googleUser->getEmail()]);
+                // Cria um novo usuário
                 $user = User::create([
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
                     'password' => Str::random(20),
                     'google_id' => $googleUser->getId(),
                     'google_token' => $googleUser->token,
-                    'google_refresh_token' => $googleUser->refreshToken,
+                    'google_refresh_token' => $googleUser->refreshToken ?? null
                 ]);
             }
 
-            // Regenerate session to prevent session fixation
-            request()->session()->invalidate();
-            request()->session()->regenerateToken();
+            // Store token in session for frontend access
+            session(['token' => $user->createToken('google-auth-token')->plainTextToken]);
+            Log::info('Token stored in session', ['token' => session('token')]);
+            request()->session()->save();
             
-            // Log in the user and save session
             Auth::login($user, true);
-            request()->session()->save();
-            
-            // Verify authentication status
-            if (!Auth::check()) {
-                Log::error('Authentication failed after login attempt', ['user_id' => $user->id]);
-                throw new \Exception('Authentication failed');
-            }
-            Log::info('User authenticated successfully', ['user_id' => $user->id]);
-
-            // Redirect to dashboard with success message
-            // Ensure session is properly saved before redirect
-            request()->session()->save();
-            
             return redirect('/dashboard')
                 ->with('status', 'Login successful!')
                 ->withHeaders(['Cache-Control' => 'no-store, must-revalidate']);
         } catch (\Exception $e) {
-            // Log the error for debugging
             Log::error('Google OAuth Error: ' . $e->getMessage());
-            
             return redirect()->route('login')
                 ->withErrors(['google' => 'Ocorreu um erro ao fazer login com o Google. Por favor, tente novamente.']);
         }

@@ -16,10 +16,7 @@ use App\Http\Controllers\Auth\GoogleController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::middleware('guest')->group(function () {
-    Route::get('/login/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
-    Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
-});
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -29,14 +26,24 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+    // Protected Purple Questions route
+    Route::get('/purple-questions', function () {
+        return Inertia::render('PurpleQuestions');
+    })->name('purple-questions');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware('guest')->group(function () {
+    Route::get('/login/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+    Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
 });
 
 require __DIR__.'/auth.php';

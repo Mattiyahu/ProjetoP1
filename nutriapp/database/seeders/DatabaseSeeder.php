@@ -11,10 +11,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // ... outros seeders
-
         $this->call([
             FoodSeeder::class,
+            PurpleQuestionsSeeder::class,
         ]);
     }
 }
