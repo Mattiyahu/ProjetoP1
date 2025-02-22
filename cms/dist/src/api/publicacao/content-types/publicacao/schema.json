@@ -1,0 +1,48 @@
+{
+    "kind": "collectionType",
+    "collectionName": "publicacaos",
+    "info": {
+        "singularName": "publicacao",
+        "pluralName": "publicacaos",
+        "displayName": "Publicação"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "attributes": {
+        "titulo": {
+            "type": "string"
+        },
+        "Conteudo": {
+            "type": "blocks"
+        },
+        "imagemcapa": {
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ],
+            "type": "media",
+            "multiple": true
+        },
+        "data": {
+            "type": "datetime"
+        },
+        "stats": {
+            "type": "enumeration",
+            "enum": [
+                "rascunho",
+                "publicado"
+            ]
+        },
+        "Categoria": {
+            "type": "enumeration",
+            "enum": [
+                "Artigos",
+                "Receitas",
+                "Conteúdo Educativo"
+            ]
+        }
+    }
+}
