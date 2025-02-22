@@ -1,5 +1,5 @@
 import React from 'react';
-import { LexicalComposer } from '@lexical/react/LexicalComposerContext';
+import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
@@ -7,6 +7,7 @@ import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { AutoLinkNode } from '@lexical/link';
 import { editorConfig } from './Editor/editorConfig';
 import { convertToHtml, convertFromHtml, sanitizeHtml } from './Editor/utils/html';
 import Toolbar from './Editor/Toolbar';
@@ -57,19 +58,31 @@ const RichTextEditor = ({
     placeholder = 'Comece a escrever...',
     className = ''
 }) => {
-    const handleChange = (editorState, editor) => {
-        try {
-            const html = convertToHtml(editorState);
-            const sanitizedHtml = sanitizeHtml(html);
-            onChange(sanitizedHtml);
-        } catch (error) {
-            console.error('Error handling editor change:', error);
+    const config = {
+        ...editorConfig,
+        nodes: [...editorConfig.nodes, AutoLinkNode],
+        onError: (error) => {
+            console.error('Editor Error:', error);
+        },
+    };
+
+    const handleChange = (editorState) => {
+        if (onChange) {
+            try {
+                editorState.read(() => {
+                    const html = convertToHtml(editorState);
+                    const sanitizedHtml = sanitizeHtml(html);
+                    onChange(sanitizedHtml);
+                });
+            } catch (error) {
+                console.error('Error handling editor change:', error);
+            }
         }
     };
 
     return (
         <div className={`lexical-editor-wrapper ${className}`}>
-            <LexicalComposer initialConfig={editorConfig}>
+            <LexicalComposer initialConfig={config}>
                 <div className="editor-shell">
                     <Toolbar />
                     <div className="editor-container">

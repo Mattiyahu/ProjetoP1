@@ -1,42 +1,24 @@
-import { useForm } from '@inertiajs/react';
-import RichTextEditor from '@/Components/RichTextEditor';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import TextInput from '@/Components/TextInput';
-import PrimaryButton from '@/Components/PrimaryButton';
+import React from 'react';
+import RichTextEditor from './RichTextEditor';
+import InputError from './InputError';
+import InputLabel from './InputLabel';
+import TextInput from './TextInput';
+import PrimaryButton from './PrimaryButton';
 
-export default function EducationalContentForm({ content = null }) {
-    const { data, setData, post, put, processing, errors } = useForm({
-        title: content?.title || '',
-        summary: content?.summary || '',
-        content: content?.content || '',
-        category: content?.category || 'nutrition',
-        image_url: content?.image_url || '',
-        tags: content?.tags || ''
-    });
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (content) {
-            put(route('educational-content.update', content.id));
-        } else {
-            post(route('educational-content.store'));
-        }
-    };
-
+export default function EducationalContentForm({ content, onChange, onSubmit }) {
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={onSubmit} className="space-y-6">
             <div>
                 <InputLabel htmlFor="title" value="Título" />
                 <TextInput
                     id="title"
                     type="text"
                     name="title"
-                    value={data.title}
+                    value={content.title}
                     className="mt-1 block w-full"
-                    onChange={(e) => setData('title', e.target.value)}
+                    onChange={onChange}
+                    required
                 />
-                <InputError message={errors.title} className="mt-2" />
             </div>
 
             <div>
@@ -44,22 +26,21 @@ export default function EducationalContentForm({ content = null }) {
                 <textarea
                     id="summary"
                     name="summary"
-                    value={data.summary}
+                    value={content.summary}
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                     rows="3"
-                    onChange={(e) => setData('summary', e.target.value)}
+                    onChange={onChange}
+                    required
                 />
-                <InputError message={errors.summary} className="mt-2" />
             </div>
 
             <div>
                 <InputLabel htmlFor="content" value="Conteúdo" />
                 <RichTextEditor
-                    value={data.content}
-                    onChange={(content) => setData('content', content)}
-                    placeholder="Escreva o conteúdo do artigo aqui..."
+                    value={content.content}
+                    onChange={(value) => onChange({ target: { name: 'content', value } })}
+                    placeholder="Escreva o conteúdo aqui..."
                 />
-                <InputError message={errors.content} className="mt-2" />
             </div>
 
             <div>
@@ -67,9 +48,9 @@ export default function EducationalContentForm({ content = null }) {
                 <select
                     id="category"
                     name="category"
-                    value={data.category}
+                    value={content.category}
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                    onChange={(e) => setData('category', e.target.value)}
+                    onChange={onChange}
                 >
                     <option value="nutrition">Nutrição</option>
                     <option value="health">Saúde</option>
@@ -77,7 +58,6 @@ export default function EducationalContentForm({ content = null }) {
                     <option value="diet">Dieta</option>
                     <option value="lifestyle">Estilo de Vida</option>
                 </select>
-                <InputError message={errors.category} className="mt-2" />
             </div>
 
             <div>
@@ -86,11 +66,10 @@ export default function EducationalContentForm({ content = null }) {
                     id="image_url"
                     type="url"
                     name="image_url"
-                    value={data.image_url}
+                    value={content.image_url}
                     className="mt-1 block w-full"
-                    onChange={(e) => setData('image_url', e.target.value)}
+                    onChange={onChange}
                 />
-                <InputError message={errors.image_url} className="mt-2" />
             </div>
 
             <div>
@@ -99,16 +78,29 @@ export default function EducationalContentForm({ content = null }) {
                     id="tags"
                     type="text"
                     name="tags"
-                    value={data.tags}
+                    value={content.tags}
                     className="mt-1 block w-full"
-                    onChange={(e) => setData('tags', e.target.value)}
+                    onChange={onChange}
                 />
-                <InputError message={errors.tags} className="mt-2" />
+            </div>
+
+            <div>
+                <InputLabel htmlFor="status" value="Status" />
+                <select
+                    id="status"
+                    name="status"
+                    value={content.status}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    onChange={onChange}
+                >
+                    <option value="draft">Rascunho</option>
+                    <option value="published">Publicado</option>
+                </select>
             </div>
 
             <div className="flex items-center justify-end">
-                <PrimaryButton type="submit" className="ml-4" disabled={processing}>
-                    {content ? 'Atualizar Conteúdo' : 'Criar Conteúdo'}
+                <PrimaryButton type="submit">
+                    {content.id ? 'Atualizar Conteúdo' : 'Criar Conteúdo'}
                 </PrimaryButton>
             </div>
         </form>

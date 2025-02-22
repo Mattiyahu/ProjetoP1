@@ -22,6 +22,11 @@ class EducationalContentController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        return Inertia::render('EducationalContent/Create');
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -44,6 +49,20 @@ class EducationalContentController extends Controller
         }
 
         return back()->withErrors(['error' => 'Erro ao criar conteúdo.']);
+    }
+
+    public function edit($id)
+    {
+        $response = Http::get($this->strapiUrl . '/posts/' . $id);
+        
+        if ($response->successful()) {
+            $content = $response->json()['data'];
+            return Inertia::render('EducationalContent/Edit', [
+                'content' => $content
+            ]);
+        }
+
+        return redirect()->route('educational-content')->withErrors(['error' => 'Conteúdo não encontrado.']);
     }
 
     public function update(Request $request, $id)

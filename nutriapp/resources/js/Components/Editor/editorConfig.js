@@ -1,7 +1,10 @@
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { ListItemNode, ListNode } from '@lexical/list';
-import { LinkNode } from '@lexical/link';
+import { LinkNode, AutoLinkNode } from '@lexical/link';
 import { CodeNode } from '@lexical/code';
+
+const urlMatcher = /((https?:\/\/(www\.)?)|(www\.))[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+const emailMatcher = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
 
 export const editorConfig = {
     namespace: 'NutriAppEditor',
@@ -31,9 +34,33 @@ export const editorConfig = {
         ListItemNode,
         ListNode,
         LinkNode,
+        AutoLinkNode,
         CodeNode,
     ],
     onError(error) {
         console.error(error);
     },
+    matchers: [
+        (text) => {
+            const match = urlMatcher.exec(text);
+            if (match === null) return null;
+            return {
+                index: match.index,
+                length: match[0].length,
+                text: match[0],
+                url: match[0].startsWith('www.') ? `https://${match[0]}` : match[0],
+                attributes: { rel: 'noreferrer noopener', target: '_blank' },
+            };
+        },
+        (text) => {
+            const match = emailMatcher.exec(text);
+            if (match === null) return null;
+            return {
+                index: match.index,
+                length: match[0].length,
+                text: match[0],
+                url: `mailto:${match[0]}`,
+            };
+        },
+    ],
 };

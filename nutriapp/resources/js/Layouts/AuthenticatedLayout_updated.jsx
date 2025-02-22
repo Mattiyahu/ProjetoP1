@@ -24,28 +24,29 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
-
+                                
                                 {/* Menu Items */}
                                 <NavLink href={route('purple-questions')} active={route().current('purple-questions')}>
                                     Questionário Purple
                                 </NavLink>
-
+                                
                                 <NavLink href={route('food-tracking')} active={route().current('food-tracking')}>
                                     Acompanhamento Alimentar
                                 </NavLink>
-
+                                
                                 <NavLink href={route('r24h-questionnaire')} active={route().current('r24h-questionnaire')}>
                                     Questionário R24h
                                 </NavLink>
 
                                 {/* Admin Button - Only show for admin users */}
                                 {user.roles?.includes('admin') && (
-                                    <Link
-                                        href="/admin"
-                                        className="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-700 focus:bg-primary-700 active:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition ease-in-out duration-150 ml-4"
+                                    <NavLink 
+                                        href={route('admin.dashboard')} 
+                                        active={route().current('admin.*')}
+                                        className="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700"
                                     >
                                         Área Administrativa
-                                    </Link>
+                                    </NavLink>
                                 )}
                             </div>
                         </div>
@@ -87,6 +88,7 @@ export default function Authenticated({ user, header, children }) {
                             </div>
                         </div>
 
+                        {/* Mobile menu button */}
                         <div className="-mr-2 flex items-center sm:hidden">
                             <button
                                 onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
@@ -113,28 +115,33 @@ export default function Authenticated({ user, header, children }) {
                     </div>
                 </div>
 
+                {/* Mobile menu */}
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
                             Dashboard
                         </ResponsiveNavLink>
-
+                        
                         {/* Mobile Menu Items */}
                         <ResponsiveNavLink href={route('purple-questions')} active={route().current('purple-questions')}>
                             Questionário Purple
                         </ResponsiveNavLink>
-
+                        
                         <ResponsiveNavLink href={route('food-tracking')} active={route().current('food-tracking')}>
                             Acompanhamento Alimentar
                         </ResponsiveNavLink>
-
+                        
                         <ResponsiveNavLink href={route('r24h-questionnaire')} active={route().current('r24h-questionnaire')}>
                             Questionário R24h
                         </ResponsiveNavLink>
 
                         {/* Admin Button - Mobile */}
                         {user.roles?.includes('admin') && (
-                            <ResponsiveNavLink href="/admin">
+                            <ResponsiveNavLink 
+                                href={route('admin.dashboard')} 
+                                active={route().current('admin.*')}
+                                className="bg-primary-600 text-white"
+                            >
                                 Área Administrativa
                             </ResponsiveNavLink>
                         )}

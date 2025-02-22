@@ -23,15 +23,10 @@ export default function Login({ status, canResetPassword }) {
     const submit = (e) => {
         e.preventDefault();
 
-        console.log('CSRF Token:', document.querySelector('meta[name="csrf-token"]').getAttribute('content')); // Log the CSRF token
-
         post(route('login'), {
             preserveScroll: true,
             onSuccess: () => {
                 reset('password');
-            },
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         });
     };
