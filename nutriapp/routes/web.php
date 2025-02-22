@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Api\EducationalContentController;
-use App\Http\Controllers\Api\RecipeController;
+use App\Http\Controllers\EducationalContentController;
+use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\PurpleQuestionController;
+use App\Http\Controllers\FoodTrackingController;
+use App\Http\Controllers\R24hQuestionnaireController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,6 +42,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Purple Questions Routes
+    Route::get('/purple-questions', [PurpleQuestionController::class, 'index'])->name('purple-questions');
+
+    // Food Tracking Routes
+    Route::get('/food-tracking', [FoodTrackingController::class, 'index'])->name('food-tracking');
+
+    // R24h Questionnaire Routes
+    Route::get('/r24h-questionnaire', [R24hQuestionnaireController::class, 'index'])->name('r24h-questionnaire');
 
     // Educational Content Routes
     Route::prefix('educational-content')->name('educational.content.')->group(function () {

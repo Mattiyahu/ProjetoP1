@@ -32,14 +32,16 @@ class HandleInertiaRequests extends Middleware
     {
         $user = $request->user();
         $token = null;
+        $permissions = [];
 
         if ($user) {
             $token = $user->tokens()->latest()->first()?->plainTextToken ?? session('token');
+            $permissions = $user->getAllPermissions()->pluck('name');
         }
 
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => $user,
+                'user' => $user ? array_merge($user->toArray(), ['permissions' => $permissions]) : null,
                 'token' => $token,
             ],
             'csrf_token' => csrf_token(),
@@ -48,6 +50,13 @@ class HandleInertiaRequests extends Middleware
             ],
             'ziggy' => [
                 'url' => $request->getBaseUrl()
+            ],
+            'routes' => [
+                'purple-questions' => route('purple-questions'),
+                'food-tracking' => route('food-tracking'),
+                'r24h-questionnaire' => route('r24h-questionnaire'),
+                'educational.content.index' => route('educational.content.index'),
+                'recipes.index' => route('recipes.index'),
             ],
         ]);
     }

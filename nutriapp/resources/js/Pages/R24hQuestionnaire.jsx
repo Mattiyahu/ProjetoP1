@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import FoodConsumptionDashboardCard from '@/Components/FoodConsumptionDashboardCard';
 
-export default function R24hQuestionnaire({ auth }) {
+export default function R24hQuestionnaire({ auth, sections }) {
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -13,7 +13,7 @@ export default function R24hQuestionnaire({ auth }) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <FoodConsumptionDashboardCard auth={auth} />
+                    <FoodConsumptionDashboardCard auth={auth} sections={sections} />
                 </div>
             </div>
         </AuthenticatedLayout>

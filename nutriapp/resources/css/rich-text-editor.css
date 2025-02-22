@@ -1,0 +1,36 @@
+/* Rich Text Editor Styles */
+.rich-text-editor {
+    @apply relative;
+}
+
+.rich-text-editor .ql-toolbar {
+    @apply bg-white border border-gray-300 rounded-t-md;
+}
+
+.rich-text-editor .ql-container {
+    @apply bg-white border-x border-b border-gray-300 rounded-b-md;
+    min-height: 200px;
+}
+
+.rich-text-editor .ql-editor {
+    @apply min-h-[200px] text-gray-700;
+}
+
+.rich-text-editor .ql-editor p {
+    @apply mb-2;
+}
+
+.rich-text-editor .ql-snow.ql-toolbar button:hover,
+.rich-text-editor .ql-snow.ql-toolbar button.ql-active {
+    @apply text-blue-600;
+}
+
+.rich-text-editor .ql-snow.ql-toolbar button:hover .ql-stroke,
+.rich-text-editor .ql-snow.ql-toolbar button.ql-active .ql-stroke {
+    @apply stroke-blue-600;
+}
+
+.rich-text-editor .ql-snow.ql-toolbar button:hover .ql-fill,
+.rich-text-editor .ql-snow.ql-toolbar button.ql-active .ql-fill {
+    @apply fill-blue-600;
+}

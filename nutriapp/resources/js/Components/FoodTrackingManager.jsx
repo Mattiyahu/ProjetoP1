@@ -13,48 +13,40 @@ const FoodTrackingManager = ({ auth }) => {
     const [trackingDate, setTrackingDate] = useState(new Date().toISOString().split('T')[0]);
 
     useEffect(() => {
-        const setupAxios = () => {
-            axios.defaults.withCredentials = true;
-            axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-            axios.defaults.headers.common['Accept'] = 'application/json';
-            
-            // Get token from auth prop
-            const token = auth?.token;
-            console.log('Current token:', token);
+        const setupAxios = async () => {
+            try {
+                // Get CSRF token from meta tag
+                const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                if (token) {
+                    axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+                }
 
-            if (token) {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                axios.defaults.withCredentials = true;
+                axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+                axios.defaults.headers.common['Accept'] = 'application/json';
+
+                // Get Sanctum CSRF cookie
+                await axios.get('/sanctum/csrf-cookie');
+                
                 fetchQuestions();
-            } else {
-                console.error('No auth token available');
-                setSubmitError('Erro de autenticação. Por favor, faça login novamente.');
+            } catch (error) {
+                console.error('Error setting up axios:', error);
+                setSubmitError('Erro de configuração. Por favor, recarregue a página.');
                 setLoading(false);
             }
         };
 
         setupAxios();
-    }, [auth?.token]);
+    }, []);
 
     const fetchQuestions = async () => {
         try {
-            console.log('Making request with headers:', {
-                Authorization: axios.defaults.headers.common['Authorization'],
-                Accept: axios.defaults.headers.common['Accept'],
-                'X-Requested-With': axios.defaults.headers.common['X-Requested-With']
-            });
-
             const response = await axios.get('/api/food-tracking/questions');
-            console.log('Questions response:', response.data);
-            
-            const groupedQuestions = groupQuestionsByCategory(response.data);
+            const groupedQuestions = groupQuestionsByCategory(response.data.questions);
             setQuestions(groupedQuestions);
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching questions:', {
-                error: error.response?.data || error.message,
-                status: error.response?.status,
-                headers: error.response?.headers
-            });
+            console.error('Error fetching questions:', error);
             setSubmitError('Erro ao carregar as perguntas. Por favor, tente novamente.');
             setLoading(false);
         }
@@ -92,14 +84,14 @@ const FoodTrackingManager = ({ auth }) => {
                 })),
                 tracking_date: trackingDate
             });
-            console.log('Submit response:', response.data);
+
+            if (response.data.csrf_token) {
+                axios.defaults.headers.common['X-CSRF-TOKEN'] = response.data.csrf_token;
+            }
+
             setSubmitted(true);
         } catch (error) {
-            console.error('Error submitting answers:', {
-                error: error.response?.data || error.message,
-                status: error.response?.status,
-                headers: error.response?.headers
-            });
+            console.error('Error submitting answers:', error);
             setSubmitError('Erro ao enviar as respostas. Por favor, tente novamente.');
         } finally {
             setSubmitting(false);

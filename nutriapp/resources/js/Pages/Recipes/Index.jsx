@@ -1,107 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import axios from 'axios';
-import RecipeForm from '../../Components/RecipeForm';
-import RecipeCard from '../../Components/RecipeCard';
+import { useState } from 'react';
+import { Head, Link } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import RecipeCard from '@/Components/RecipeCard';
+import PrimaryButton from '@/Components/PrimaryButton';
 
-const Index = ({ auth }) => {
-    const [recipes, setRecipes] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [newRecipe, setNewRecipe] = useState({
-        title: '',
-        description: '',
-        ingredients: '',
-        instructions: '',
-        preparation_time: '',
-        difficulty_level: 'medium',
-        image_url: ''
-    });
-
-    useEffect(() => {
-        fetchRecipes();
-    }, []);
-
-    const fetchRecipes = async () => {
-        try {
-            const response = await axios.get('/api/recipes');
-            setRecipes(response.data);
-            setLoading(false);
-        } catch (err) {
-            setError('Failed to load recipes');
-            setLoading(false);
-            console.error('Error fetching recipes:', err);
-        }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await axios.post('/api/recipes', newRecipe);
-            setNewRecipe({
-                title: '',
-                description: '',
-                ingredients: '',
-                instructions: '',
-                preparation_time: '',
-                difficulty_level: 'medium',
-                image_url: ''
-            });
-            fetchRecipes();
-        } catch (err) {
-            console.error('Error creating recipe:', err);
-        }
-    };
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewRecipe(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
+export default function Index({ auth, recipes }) {
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Receitas Saudáveis</h2>}
+            header={
+                <div className="flex justify-between items-center">
+                    <h2 className="font-semibold text-xl text-gray-800 leading-tight">Receitas</h2>
+                    {auth.user.permissions.includes('create recipes') && (
+                        <Link href={route('recipes.create')}>
+                            <PrimaryButton type="button">
+                                Nova Receita
+                            </PrimaryButton>
+                        </Link>
+                    )}
+                </div>
+            }
         >
             <Head title="Receitas" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <h3 className="text-lg font-medium mb-4">Adicionar Nova Receita</h3>
-                        <RecipeForm
-                            recipe={newRecipe}
-                            onChange={handleInputChange}
-                            onSubmit={handleSubmit}
-                        />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {recipes.map((recipe) => (
+                            <RecipeCard
+                                key={recipe.id}
+                                recipe={recipe}
+                                canEdit={auth.user.permissions.includes('edit recipes')}
+                                canDelete={auth.user.permissions.includes('delete recipes')}
+                            />
+                        ))}
                     </div>
-
-                    <div className="mt-8">
-                        <h3 className="text-lg font-medium mb-4">Receitas Disponíveis</h3>
-                        {loading ? (
-                            <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                                <p>Carregando receitas...</p>
+                    {recipes.length === 0 && (
+                        <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                            <div className="p-6 text-gray-900 text-center">
+                                Nenhuma receita encontrada.
                             </div>
-                        ) : error ? (
-                            <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                                <p className="text-red-600">{error}</p>
-                            </div>
-                        ) : (
-                            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                                {recipes.map(recipe => (
-                                    <RecipeCard key={recipe.id} recipe={recipe} />
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </AuthenticatedLayout>
     );
-};
-
-export default Index;
+}

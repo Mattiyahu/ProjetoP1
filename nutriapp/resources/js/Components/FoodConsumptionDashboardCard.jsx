@@ -1,29 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const FoodConsumptionDashboardCard = ({ auth }) => {
-    const [sections, setSections] = useState([]);
+const FoodConsumptionDashboardCard = ({ auth, sections: initialSections }) => {
+    const [sections, setSections] = useState(initialSections || []);
     const [answers, setAnswers] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(!initialSections);
     const [error, setError] = useState(null);
     const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
 
     useEffect(() => {
+        if (initialSections) {
+            setSections(initialSections);
+            setLoading(false);
+            return;
+        }
+
         const fetchSections = async () => {
             try {
                 // Set up axios defaults with the auth token
-                if (auth?.user) {
-const token = sessionStorage.getItem('token');
-if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-} else {
-    console.error('No authentication token found in sessionStorage.');
-}
+                if (auth?.token) {
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;
                 }
 
-                // Get CSRF cookie first
-                await axios.get('/sanctum/csrf-cookie');
-                
                 const response = await axios.get('/api/r24h-questionnaire-sections');
                 setSections(response.data);
                 setLoading(false);
@@ -35,7 +33,7 @@ if (token) {
         };
 
         fetchSections();
-    }, [auth]);
+    }, [initialSections, auth?.token]);
 
     const handleInputChange = (itemId, value) => {
         setAnswers(prev => ({

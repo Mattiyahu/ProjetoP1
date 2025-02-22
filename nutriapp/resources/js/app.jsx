@@ -1,5 +1,8 @@
 import './bootstrap';
 import '../css/app.css';
+import 'react-quill/dist/quill.snow.css';
+import '../css/rich-text-editor.css';
+import 'react-quill/dist/quill.snow.css';
 
 import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';

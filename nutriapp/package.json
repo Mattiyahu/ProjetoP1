@@ -20,6 +20,13 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
+        "@lexical/code": "^0.25.0",
+        "@lexical/html": "^0.25.0",
+        "@lexical/link": "^0.25.0",
+        "@lexical/list": "^0.25.0",
+        "@lexical/react": "^0.25.0",
+        "@lexical/rich-text": "^0.25.0",
+        "lexical": "^0.25.0",
         "react-quill": "^2.0.0"
     }
 }

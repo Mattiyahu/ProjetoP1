@@ -2,231 +2,219 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Estilos Base */
+/* Base Styles */
 @layer base {
     html {
         scroll-behavior: smooth;
-        @apply antialiased;
     }
-    
+
     body {
-        @apply bg-white text-gray-800 font-sans overflow-x-hidden
-               dark:bg-dark-bg dark:text-dark-text;
-    }
-
-    h1 {
-        @apply text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-4 leading-tight
-               dark:text-dark-primary;
-    }
-
-    h2 {
-        @apply text-3xl md:text-4xl font-semibold text-primary-400 mb-3 leading-snug
-               dark:text-dark-primary;
-    }
-
-    h3 {
-        @apply text-2xl font-medium text-primary-500 mb-2 leading-relaxed
-               dark:text-dark-primary;
+        @apply antialiased bg-beige-100 dark:bg-dark-bg transition-colors duration-300;
     }
 }
 
-/* Componentes */
+/* Navigation Styles */
+.nav-link {
+    @apply font-medium transition-colors duration-300 hover:text-primary-500 dark:hover:text-dark-primary;
+}
+
+.mobile-nav-link {
+    @apply block w-full py-2 px-4 text-primary-600 dark:text-dark-text hover:bg-primary-50 dark:hover:bg-dark-card rounded-lg transition-colors duration-300;
+}
+
+.nav-button {
+    @apply inline-flex items-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium transition-colors duration-300;
+}
+
+/* Layout Components */
 @layer components {
-    /* Botões */
-    .btn-primary {
-        @apply inline-flex items-center justify-center bg-primary hover:bg-primary-600 text-beige-100 font-semibold 
-               py-2 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105
-               focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-opacity-50
-               shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed
-               text-center whitespace-nowrap
-               dark:bg-dark-primary dark:hover:bg-primary-700 dark:text-dark-text;
-    }
-    
-    .btn-secondary {
-        @apply inline-flex items-center justify-center bg-beige-200 hover:bg-beige-300 text-primary font-semibold 
-               py-2 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105
-               focus:outline-none focus:ring-2 focus:ring-beige-400 focus:ring-opacity-50
-               shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed
-               text-center whitespace-nowrap
-               dark:bg-dark-card dark:hover:bg-dark-border dark:text-dark-text;
+    .container-custom {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
     }
 
-    /* Links de Navegação */
-    .nav-link {
-        @apply font-medium transition-all duration-300 hover:text-primary-300 relative
-               after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 
-               after:bg-primary-300 after:transition-all after:duration-300
-               hover:after:w-full
-               dark:text-dark-text dark:hover:text-dark-primary;
-    }
-
-    .mobile-nav-link {
-        @apply block py-2 px-4 text-lg transition-all duration-300 hover:bg-primary-50 
-               hover:text-primary-600 rounded-lg
-               dark:hover:bg-dark-card dark:hover:text-dark-primary;
-    }
-
-    /* Cards */
-    .feature-card {
-        @apply bg-white rounded-xl shadow-lg p-6 transition-all duration-300
-               hover:shadow-2xl hover:scale-105 transform
-               border border-beige-200/50
-               dark:bg-dark-card dark:border-dark-border dark:text-dark-text;
-    }
-
-    /* Seções */
     .section {
-        @apply py-20 px-4 overflow-hidden;
+        @apply py-16 md:py-24;
     }
 
     .section-title {
-        @apply text-center mb-12 relative
-               dark:text-dark-text;
-    }
-
-    /* Hero Section */
-    .hero {
-        @apply relative min-h-screen flex items-center justify-center text-white;
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-
-        &::before {
-            content: '';
-            @apply absolute inset-0 bg-gradient-to-r from-black/50 to-primary-900/50 z-0
-                   dark:from-black/70 dark:to-primary-900/70;
-        }
-    }
-
-    .hero-content {
-        @apply relative z-10 text-center max-w-4xl mx-auto px-4;
-    }
-
-    /* Estatísticas */
-    .stats-container {
-        @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto px-4;
-    }
-
-    .stat-card {
-        @apply bg-white/90 backdrop-blur-sm rounded-lg p-6 text-center
-               transform transition-all duration-300 hover:scale-105 hover:shadow-xl
-               border border-beige-200/50
-               dark:bg-dark-card/90 dark:border-dark-border dark:text-dark-text;
-    }
-
-    .stat-number {
-        @apply text-4xl font-bold text-primary mb-2 
-               bg-gradient-to-r from-primary-500 to-primary-700 
-               bg-clip-text text-transparent
-               dark:from-dark-primary dark:to-primary-600;
-    }
-
-    /* Testimonials */
-    .testimonial-card {
-        @apply bg-white rounded-xl shadow-lg p-8 relative
-               transform transition-all duration-300 hover:shadow-2xl
-               border border-beige-200/50
-               dark:bg-dark-card dark:border-dark-border dark:text-dark-text;
-
-        &::before {
-            content: '"';
-            @apply absolute -top-4 left-4 text-6xl text-primary-200
-                   dark:text-dark-primary;
-        }
-    }
-
-    /* Parallax Section */
-    .parallax {
-        @apply relative overflow-hidden bg-fixed bg-center bg-no-repeat bg-cover;
-    }
-
-    .parallax-overlay {
-        @apply absolute inset-0 bg-gradient-to-r from-primary-900/80 to-primary-700/80
-               dark:from-dark-bg/90 dark:to-primary-900/90;
+        @apply text-3xl md:text-4xl font-bold text-center mb-12 text-primary-600 dark:text-dark-text;
     }
 }
 
-/* Animações */
-@layer utilities {
-    .text-shadow {
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-    
-    .text-gradient {
-        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-primary-700
-               dark:from-dark-primary dark:to-primary-600;
-    }
+/* Hero Section */
+.hero {
+    @apply relative min-h-screen bg-cover bg-center bg-no-repeat flex items-center;
+}
 
-    /* Animações de entrada */
-    .fade-in {
-        opacity: 0;
+.hero::before {
+    @apply absolute inset-0 bg-black/50;
+    content: '';
+}
+
+.hero-content {
+    @apply container-custom relative z-10 text-center py-20;
+}
+
+.hero-content h1 {
+    @apply text-4xl md:text-6xl font-bold text-white mb-6;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-content p {
+    @apply text-lg md:text-xl text-white/90 mb-8 max-w-3xl mx-auto;
+}
+
+/* Stats Section */
+.stats-container {
+    @apply container-custom grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8;
+}
+
+.stat-card {
+    @apply bg-white dark:bg-dark-card p-6 rounded-xl shadow-lg text-center 
+           transform transition-all duration-300 hover:scale-105 hover:shadow-xl
+           border border-gray-100 dark:border-gray-700;
+}
+
+.stat-number {
+    @apply text-4xl font-bold text-primary dark:text-dark-primary mb-2;
+    background: linear-gradient(135deg, #4F46E5, #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Features Section */
+.feature-card {
+    @apply bg-white dark:bg-dark-card p-8 rounded-xl shadow-lg text-center 
+           transition-all duration-300 hover:shadow-2xl hover:-translate-y-1
+           border border-gray-100 dark:border-gray-700;
+}
+
+.feature-icon {
+    @apply h-16 w-16 mx-auto mb-6 text-primary dark:text-dark-primary
+           bg-primary-50 dark:bg-dark-card rounded-full flex items-center justify-center;
+}
+
+/* Parallax Section */
+.parallax {
+    @apply relative bg-fixed bg-cover bg-center py-32;
+}
+
+.parallax-overlay {
+    @apply absolute inset-0 bg-black/60;
+}
+
+.parallax-content {
+    @apply relative z-10 container-custom text-center text-white;
+}
+
+/* Testimonials Section */
+.testimonials-grid {
+    @apply container-custom grid grid-cols-1 md:grid-cols-3 gap-8;
+}
+
+.testimonial-card {
+    @apply bg-white dark:bg-dark-card p-8 rounded-xl shadow-lg relative
+           transition-all duration-300 hover:shadow-2xl
+           border border-gray-100 dark:border-gray-700;
+}
+
+.testimonial-quote {
+    @apply absolute top-4 left-4 text-6xl text-primary-200 dark:text-dark-primary opacity-20 font-serif;
+}
+
+/* Buttons */
+.btn-primary {
+    @apply inline-flex items-center px-6 py-3 border border-transparent rounded-lg
+           text-base font-medium text-white bg-primary hover:bg-primary-700
+           transition-colors duration-300 shadow-lg hover:shadow-xl
+           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
+}
+
+.btn-secondary {
+    @apply inline-flex items-center px-6 py-3 border border-primary rounded-lg
+           text-base font-medium text-primary bg-transparent hover:bg-primary/10
+           transition-colors duration-300 shadow-lg hover:shadow-xl
+           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
         transform: translateY(20px);
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        opacity: 0;
     }
-
-    .fade-in.visible {
-        opacity: 1;
+    to {
         transform: translateY(0);
-    }
-
-    .slide-in-left {
-        opacity: 0;
-        transform: translateX(-100px);
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-
-    .slide-in-left.visible {
         opacity: 1;
-        transform: translateX(0);
-    }
-
-    .slide-in-right {
-        opacity: 0;
-        transform: translateX(100px);
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-
-    .slide-in-right.visible {
-        opacity: 1;
-        transform: translateX(0);
-    }
-
-    /* Hover Effects */
-    .hover-lift {
-        @apply transition-transform duration-300 ease-in-out hover:-translate-y-1;
-    }
-
-    .hover-glow {
-        @apply transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-primary-500/20
-               dark:hover:shadow-dark-primary/20;
-    }
-
-    /* Glassmorphism */
-    .glass {
-        @apply bg-white/70 backdrop-blur-md
-               dark:bg-dark-bg/70;
-    }
-
-    /* Gradientes */
-    .bg-gradient-primary {
-        @apply bg-gradient-to-r from-primary-600 to-primary-400
-               dark:from-dark-primary dark:to-primary-600;
-    }
-    
-    .bg-gradient-beige {
-        @apply bg-gradient-to-r from-beige-200 to-beige-100
-               dark:from-dark-card dark:to-dark-bg;
     }
 }
 
-/* Responsividade */
-@media (max-width: 640px) {
-    .hero-content {
-        @apply px-4;
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 1s ease-out;
+}
+
+.animate-slide-up {
+    animation: slideUp 1s ease-out;
+}
+
+.animate-slide-left {
+    animation: slideInLeft 1s ease-out;
+}
+
+.animate-slide-right {
+    animation: slideInRight 1s ease-out;
+}
+
+/* Dark Mode Adjustments */
+.dark {
+    .stat-card, .feature-card, .testimonial-card {
+        @apply shadow-lg shadow-gray-800/10;
+    }
+    
+    .btn-primary {
+        @apply bg-primary-600 hover:bg-primary-700;
+    }
+    
+    .btn-secondary {
+        @apply border-primary-600 text-primary-600 hover:bg-primary-600/10;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        @apply text-3xl;
     }
 
     .section {
-        @apply py-12 px-4;
+        @apply py-12;
     }
 
     .stats-container {
@@ -234,20 +222,85 @@
     }
 
     .feature-card, .testimonial-card {
-        @apply p-4;
+        @apply p-6;
     }
 }
 
-/* Scrollbar personalizada */
-::-webkit-scrollbar {
-    @apply w-2;
+/* Editor Styles - Scoped */
+.lexical-editor-wrapper {
+    @apply relative;
 }
 
-::-webkit-scrollbar-track {
-    @apply bg-beige-100 dark:bg-dark-card;
+.lexical-editor-wrapper .editor-shell {
+    @apply relative bg-white border border-gray-300 rounded-md overflow-hidden;
 }
 
-::-webkit-scrollbar-thumb {
-    @apply bg-primary-400 rounded-full hover:bg-primary-500
-           dark:bg-dark-primary dark:hover:bg-primary-600;
+.lexical-editor-wrapper .editor-container {
+    @apply relative;
+}
+
+.lexical-editor-wrapper .editor-input {
+    @apply min-h-[300px] px-4 py-4 text-gray-700 outline-none;
+    caret-color: #444;
+}
+
+.lexical-editor-wrapper .editor-placeholder {
+    @apply text-gray-400 absolute pointer-events-none select-none;
+    top: 15px;
+    left: 15px;
+}
+
+.lexical-editor-wrapper .editor-paragraph {
+    @apply my-2 leading-relaxed;
+}
+
+/* Toolbar Styles - Scoped */
+.lexical-editor-wrapper .toolbar {
+    @apply flex items-center gap-1 p-2 border-b border-gray-200 bg-white flex-wrap;
+}
+
+.lexical-editor-wrapper .toolbar button {
+    @apply p-2 rounded hover:bg-gray-100 transition-colors duration-200;
+}
+
+.lexical-editor-wrapper .toolbar button.active {
+    @apply bg-gray-100 text-blue-600;
+}
+
+.lexical-editor-wrapper .toolbar .divider {
+    @apply w-px h-6 bg-gray-200 mx-1;
+}
+
+/* Typography Styles - Scoped */
+.lexical-editor-wrapper h1 {
+    @apply text-3xl font-bold mb-4;
+}
+
+.lexical-editor-wrapper h2 {
+    @apply text-2xl font-bold mb-3;
+}
+
+.lexical-editor-wrapper ul {
+    @apply list-disc pl-5 my-4;
+}
+
+.lexical-editor-wrapper ol {
+    @apply list-decimal pl-5 my-4;
+}
+
+.lexical-editor-wrapper li {
+    @apply my-1;
+}
+
+.lexical-editor-wrapper a {
+    @apply text-blue-600 hover:text-blue-800 underline;
+}
+
+/* Error State - Scoped */
+.lexical-editor-wrapper .editor-error {
+    @apply p-4 text-red-600 bg-red-50 border border-red-200 rounded-md;
+}
+
+.lexical-editor-wrapper .editor-error pre {
+    @apply mt-2 p-2 bg-white rounded text-sm overflow-auto;
 }

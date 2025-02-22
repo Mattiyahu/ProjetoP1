@@ -1,77 +1,116 @@
-import React from 'react';
-import RichTextEditor from './RichTextEditor';
+import { useForm } from '@inertiajs/react';
+import RichTextEditor from '@/Components/RichTextEditor';
+import InputError from '@/Components/InputError';
+import InputLabel from '@/Components/InputLabel';
+import TextInput from '@/Components/TextInput';
+import PrimaryButton from '@/Components/PrimaryButton';
 
-const EducationalContentForm = ({ content, onChange, onSubmit }) => {
-    const handleRichTextChange = (field) => (value) => {
-        onChange({
-            target: {
-                name: field,
-                value
-            }
-        });
+export default function EducationalContentForm({ content = null }) {
+    const { data, setData, post, put, processing, errors } = useForm({
+        title: content?.title || '',
+        summary: content?.summary || '',
+        content: content?.content || '',
+        category: content?.category || 'nutrition',
+        image_url: content?.image_url || '',
+        tags: content?.tags || ''
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (content) {
+            put(route('educational-content.update', content.id));
+        } else {
+            post(route('educational-content.store'));
+        }
     };
 
     return (
-        <form onSubmit={onSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Título</label>
-                <input
+                <InputLabel htmlFor="title" value="Título" />
+                <TextInput
+                    id="title"
                     type="text"
                     name="title"
-                    value={content.title}
-                    onChange={onChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
-                    required
+                    value={data.title}
+                    className="mt-1 block w-full"
+                    onChange={(e) => setData('title', e.target.value)}
                 />
+                <InputError message={errors.title} className="mt-2" />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Conteúdo</label>
+                <InputLabel htmlFor="summary" value="Resumo" />
+                <textarea
+                    id="summary"
+                    name="summary"
+                    value={data.summary}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    rows="3"
+                    onChange={(e) => setData('summary', e.target.value)}
+                />
+                <InputError message={errors.summary} className="mt-2" />
+            </div>
+
+            <div>
+                <InputLabel htmlFor="content" value="Conteúdo" />
                 <RichTextEditor
-                    value={content.body}
-                    onChange={handleRichTextChange('body')}
-                    placeholder="Digite o conteúdo educativo..."
+                    value={data.content}
+                    onChange={(content) => setData('content', content)}
+                    placeholder="Escreva o conteúdo do artigo aqui..."
                 />
+                <InputError message={errors.content} className="mt-2" />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo de Conteúdo</label>
+                <InputLabel htmlFor="category" value="Categoria" />
                 <select
-                    name="content_type"
-                    value={content.content_type}
-                    onChange={onChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
+                    id="category"
+                    name="category"
+                    value={data.category}
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    onChange={(e) => setData('category', e.target.value)}
                 >
-                    <option value="educational">Educacional</option>
-                    <option value="nutritional">Nutricional</option>
+                    <option value="nutrition">Nutrição</option>
                     <option value="health">Saúde</option>
+                    <option value="wellness">Bem-estar</option>
+                    <option value="diet">Dieta</option>
                     <option value="lifestyle">Estilo de Vida</option>
                 </select>
+                <InputError message={errors.category} className="mt-2" />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-                <select
-                    name="status"
-                    value={content.status}
-                    onChange={onChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600"
-                >
-                    <option value="draft">Rascunho</option>
-                    <option value="published">Publicado</option>
-                </select>
+                <InputLabel htmlFor="image_url" value="URL da Imagem" />
+                <TextInput
+                    id="image_url"
+                    type="url"
+                    name="image_url"
+                    value={data.image_url}
+                    className="mt-1 block w-full"
+                    onChange={(e) => setData('image_url', e.target.value)}
+                />
+                <InputError message={errors.image_url} className="mt-2" />
             </div>
 
             <div>
-                <button
-                    type="submit"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                    {content.id ? 'Atualizar Conteúdo' : 'Criar Conteúdo'}
-                </button>
+                <InputLabel htmlFor="tags" value="Tags (separadas por vírgula)" />
+                <TextInput
+                    id="tags"
+                    type="text"
+                    name="tags"
+                    value={data.tags}
+                    className="mt-1 block w-full"
+                    onChange={(e) => setData('tags', e.target.value)}
+                />
+                <InputError message={errors.tags} className="mt-2" />
+            </div>
+
+            <div className="flex items-center justify-end">
+                <PrimaryButton type="submit" className="ml-4" disabled={processing}>
+                    {content ? 'Atualizar Conteúdo' : 'Criar Conteúdo'}
+                </PrimaryButton>
             </div>
         </form>
     );
-};
-
-export default EducationalContentForm;
+}

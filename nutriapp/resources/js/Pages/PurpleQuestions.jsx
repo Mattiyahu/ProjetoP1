@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, usePage } from '@inertiajs/react';
 import PurpleQuestionsManagerUpdatedFinal from '@/Components/PurpleQuestionsManagerUpdatedFinal';
 
-const PurpleQuestions = () => {
+const PurpleQuestions = ({ questions }) => {
     const { auth } = usePage().props;
 
     if (!auth.user) {
@@ -37,7 +37,7 @@ const PurpleQuestions = () => {
                         </div>
                     </div>
 
-                    <PurpleQuestionsManagerUpdatedFinal auth={auth} />
+                    <PurpleQuestionsManagerUpdatedFinal auth={auth} questions={questions} />
 
                     <div className="mt-8 text-center text-sm text-gray-600 bg-[#F5F5DC] p-4 rounded-lg shadow">
                         <p>

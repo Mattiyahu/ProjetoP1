@@ -17,21 +17,17 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
             axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
             axios.defaults.headers.common['Accept'] = 'application/json';
             
-            const token = auth?.token;
-            console.log('Current token:', token);
-
+            // Get CSRF token from meta tag
+            const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             if (token) {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                fetchQuestions();
-            } else {
-                console.error('No auth token available');
-                setSubmitError('Erro de autenticação. Por favor, faça login novamente.');
-                setLoading(false);
+                axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
             }
+
+            fetchQuestions();
         };
 
         setupAxios();
-    }, [auth?.token]);
+    }, []);
 
     const fetchQuestions = async () => {
         try {
@@ -40,6 +36,7 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
             setQuestions(groupedQuestions);
             setLoading(false);
         } catch (error) {
+            console.error('Error fetching questions:', error);
             setSubmitError('Erro ao carregar as perguntas.');
             setLoading(false);
         }
@@ -69,6 +66,7 @@ const PurpleQuestionsManagerUpdatedFinal = ({ auth }) => {
             });
             setSubmitted(true);
         } catch (error) {
+            console.error('Error submitting answers:', error);
             setSubmitError('Erro ao enviar as respostas.');
         } finally {
             setSubmitting(false);

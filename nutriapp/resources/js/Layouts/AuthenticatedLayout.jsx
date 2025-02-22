@@ -3,11 +3,12 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [darkMode, setDarkMode] = useState(false);
+    const { routes } = usePage().props;
 
     // Load dark mode preference from local storage
     useEffect(() => {
@@ -41,16 +42,16 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
-                                <NavLink href="/purple-questions" active={route().current('purple-questions')}>
+                                <NavLink href={routes['purple-questions']} active={route().current('purple-questions')}>
                                     Saúde Mental
                                 </NavLink>
-                                <NavLink href="/food-tracking" active={route().current('food-tracking')}>
+                                <NavLink href={routes['food-tracking']} active={route().current('food-tracking')}>
                                     Acompanhamento Alimentar
                                 </NavLink>
-                                <NavLink href="/r24h-questionnaire" active={route().current('r24h-questionnaire')}>
+                                <NavLink href={routes['r24h-questionnaire']} active={route().current('r24h-questionnaire')}>
                                     Recordatório 24h
                                 </NavLink>
-                                <NavLink href="/educational-content" active={route().current('educational-content')}>
+                                <NavLink href={routes['educational.content.index']} active={route().current('educational.content.*')}>
                                     Conteúdo Educativo
                                 </NavLink>
                             </div>
@@ -112,13 +113,13 @@ export default function Authenticated({ user, header, children }) {
                         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
                     </header>
                 )}
-
-                <main className="py-8">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        {children}
-                    </div>
-                </main>
             </nav>
+
+            <main className="py-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {children}
+                </div>
+            </main>
         </div>
     );
 }

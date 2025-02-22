@@ -18,7 +18,7 @@ class EducationalContentController extends Controller
 
     public function create()
     {
-        return Inertia::render('EducationalContent');
+        return Inertia::render('EducationalContent/Create');
     }
 
     public function store(Request $request)
@@ -32,10 +32,10 @@ class EducationalContentController extends Controller
 
         $validated['user_id'] = auth()->id();
 
-        $content = EducationalContent::create($validated);
+        EducationalContent::create($validated);
 
         return redirect()->route('educational.content.index')
-            ->with('message', 'Conteúdo criado com sucesso!');
+            ->with('message', 'Conteúdo educativo criado com sucesso!');
     }
 
     public function edit(EducationalContent $content)
@@ -59,7 +59,7 @@ class EducationalContentController extends Controller
         $content->update($validated);
 
         return redirect()->route('educational.content.index')
-            ->with('message', 'Conteúdo atualizado com sucesso!');
+            ->with('message', 'Conteúdo educativo atualizado com sucesso!');
     }
 
     public function destroy(EducationalContent $content)
@@ -69,6 +69,6 @@ class EducationalContentController extends Controller
         $content->delete();
 
         return redirect()->route('educational.content.index')
-            ->with('message', 'Conteúdo excluído com sucesso!');
+            ->with('message', 'Conteúdo educativo excluído com sucesso!');
     }
 }

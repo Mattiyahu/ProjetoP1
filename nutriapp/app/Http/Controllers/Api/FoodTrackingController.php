@@ -13,7 +13,7 @@ class FoodTrackingController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth:sanctum', 'verified']);
+        $this->middleware(['auth:sanctum']);
     }
 
     public function getQuestions(Request $request)
@@ -25,7 +25,14 @@ class FoodTrackingController extends Controller
             ]);
 
             $questions = FoodTrackingQuestion::orderBy('order')->get();
-            return response()->json($questions, 200);
+            
+            // Transform the questions to include the CSRF token
+            $response = [
+                'questions' => $questions,
+                'csrf_token' => csrf_token()
+            ];
+
+            return response()->json($response, 200);
         } catch (\Exception $e) {
             Log::error('Error fetching food tracking questions: ' . $e->getMessage(), [
                 'user_id' => $request->user()->id ?? null,
@@ -39,8 +46,13 @@ class FoodTrackingController extends Controller
     public function storeAnswers(Request $request)
     {
         try {
+            $user = $request->user();
+            if (!$user) {
+                return response()->json(['message' => 'Usuário não autenticado'], 401);
+            }
+
             Log::info('Receiving food tracking answers submission', [
-                'user_id' => $request->user()->id,
+                'user_id' => $user->id,
                 'token' => $request->bearerToken()
             ]);
 
@@ -51,16 +63,25 @@ class FoodTrackingController extends Controller
                 'tracking_date' => 'required|date'
             ]);
 
+            // Delete existing answers for this date if any
+            FoodTrackingAnswer::where('user_id', $user->id)
+                ->where('tracking_date', $request->input('tracking_date'))
+                ->delete();
+
+            // Store new answers
             foreach ($request->input('answers') as $answerData) {
                 FoodTrackingAnswer::create([
-                    'user_id' => $request->user()->id,
+                    'user_id' => $user->id,
                     'food_tracking_question_id' => $answerData['question_id'],
                     'answer' => $answerData['answer'],
                     'tracking_date' => $request->input('tracking_date')
                 ]);
             }
 
-            return response()->json(['message' => 'Respostas salvas com sucesso!'], 201);
+            return response()->json([
+                'message' => 'Respostas salvas com sucesso!',
+                'csrf_token' => csrf_token()
+            ], 201);
         } catch (\Exception $e) {
             Log::error('Error saving food tracking answers', [
                 'error' => $e->getMessage(),
@@ -77,17 +98,25 @@ class FoodTrackingController extends Controller
     public function getUserAnswers(Request $request)
     {
         try {
+            $user = $request->user();
+            if (!$user) {
+                return response()->json(['message' => 'Usuário não autenticado'], 401);
+            }
+
             Log::info('Getting user food tracking answers', [
-                'user_id' => $request->user()->id,
+                'user_id' => $user->id,
                 'token' => $request->bearerToken()
             ]);
 
             $answers = FoodTrackingAnswer::with('question')
-                ->where('user_id', $request->user()->id)
+                ->where('user_id', $user->id)
                 ->where('tracking_date', $request->input('date', now()->toDateString()))
                 ->get();
             
-            return response()->json($answers);
+            return response()->json([
+                'answers' => $answers,
+                'csrf_token' => csrf_token()
+            ]);
         } catch (\Exception $e) {
             Log::error('Error fetching user food tracking answers: ' . $e->getMessage(), [
                 'user_id' => $request->user()->id ?? null,
